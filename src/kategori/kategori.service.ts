@@ -1,4 +1,3 @@
-import { Inject } from '@nestjs/common';
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { CreateKategoriDto } from './dto/create-kategori.dto.js';
@@ -6,7 +5,11 @@ import { UpdateKategoriDto } from './dto/update-kategori.dto.js';
 
 @Injectable()
 export class KategoriService {
-    constructor(@Inject(PrismaService) private readonly prisma: PrismaService) { }
+    constructor(private readonly prisma: PrismaService) { }
+
+    create(createKategoriDto: CreateKategoriDto) {
+        return this.prisma.kategori.create({ data: createKategoriDto });
+    }
 
     findAll() {
         return this.prisma.kategori.findMany({
@@ -21,18 +24,14 @@ export class KategoriService {
             include: { buku: { orderBy: { judul: 'asc' } } },
         });
         if (!kategori) {
-            throw new NotFoundException(`Kategori dengan tidak ada`);
+            throw new NotFoundException(`Kategori tidak ada`);
         }
         return kategori;
     }
 
-    create(dto: CreateKategoriDto) {
-        return this.prisma.kategori.create({ data: dto });
-    }
-
-    async update(id: string, dto: UpdateKategoriDto) {
+    async update(id: string, updateKategoriDto: UpdateKategoriDto) {
         await this.findOne(id);
-        return this.prisma.kategori.update({ where: { id }, data: dto });
+        return this.prisma.kategori.update({ where: { id }, data: updateKategoriDto });
     }
 
     async remove(id: string) {

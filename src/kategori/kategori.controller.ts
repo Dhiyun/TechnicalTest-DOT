@@ -10,8 +10,8 @@ export class KategoriController {
     constructor(private readonly kategoriService: KategoriService) { }
 
     @Post()
-    create(@Body({ schema: createKategoriSchema }) dto: CreateKategoriDto) {
-        return this.kategoriService.create(dto);
+    create(@Body({ schema: createKategoriSchema }) createKategoriDto: CreateKategoriDto) {
+        return this.kategoriService.create(createKategoriDto);
     }
 
     @Get()
@@ -25,8 +25,8 @@ export class KategoriController {
     }
 
     @Patch(':id')
-    async update(@Param('id') id: string, @Body({ schema: updateKategoriSchema }) dto: UpdateKategoriDto) {
-        return this.kategoriService.update(id, dto);
+    async update(@Param('id') id: string, @Body({ schema: updateKategoriSchema }) updateKategoriDto: UpdateKategoriDto) {
+        return this.kategoriService.update(id, updateKategoriDto);
     }
 
     @Delete(':id')
