@@ -19,7 +19,7 @@ export const createBukuSchema = z.object({
     .optional()
     .nullable(),
   stok: z
-    .number({ message: 'Stok harus diisi' })
+    .number({ message: 'Stok harus berupa angka' })
     .int({ message: 'Stok harus bilangan bulat' })
     .min(0, { message: 'Stok tidak boleh mines' }),
 });
