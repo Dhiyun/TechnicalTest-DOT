@@ -20,8 +20,8 @@ export class BukuController {
   }
 
   @Get('buku')
-  findAll() {
-    return this.bukuService.findAll();
+  findAll(@Query('search') search?: string) {
+    return this.bukuService.findAll(search?.trim());
   }
 
   @Get('buku/:id')

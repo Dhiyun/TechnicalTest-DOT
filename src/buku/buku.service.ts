@@ -10,7 +10,7 @@ export class BukuService {
   private async cekKategori(kategoriId: string) {
     const kategori = await this.prisma.kategori.findUnique({ where: { id: kategoriId } });
     if (!kategori) {
-      throw new NotFoundException(`Kategori dengan id ${kategoriId} tidak ditemukan`);
+      throw new BadRequestException(`Kategori dengan id ${kategoriId} tidak ditemukan`);
     }
   }
 

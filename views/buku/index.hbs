@@ -11,7 +11,7 @@
 {{/if}}
 
 <form method="get" action="/admin/buku" class="d-flex gap-2 mb-3">
-    <input type="search" name="search" value="{{search}}" class="form-control" placeholder="Cari nama buku...">
+    <input type="search" name="search" value="{{search}}" class="form-control" placeholder="Cari judul, pengarang, atau kategori buku...">
     <button type="submit" class="btn btn-outline-primary">Cari</button>
     {{#if search}}
         <a href="/admin/buku" class="btn btn-outline-secondary">Reset</a>
@@ -50,7 +50,7 @@
                 </tr>
                 {{else}}
                 <tr>
-                    <td colspan="5" class="text-center text-muted py-4">Belum ada buku</td>
+                    <td colspan="6" class="text-center text-muted py-4">Belum ada buku</td>
                 </tr>
                 {{/each}}
             </tbody>
