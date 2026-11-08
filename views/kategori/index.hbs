@@ -32,7 +32,7 @@
             <tbody>
                 {{#each kategori}}
                 <tr>
-                    <td scope="col" class="text-center">{{nomor @index}}</td>
+                    <td class="text-center">{{nomor @index ../pagination.mulai}}</td>
                     <td>{{nama}}</td>
                     <td class="text-center">{{_count.buku}}</td>
                     <td class="text-center text-nowrap">
@@ -59,3 +59,5 @@
         </table>
     </div>
 </div>
+
+{{> pagination pagination}}

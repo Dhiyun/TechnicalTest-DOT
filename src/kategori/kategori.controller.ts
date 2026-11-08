@@ -6,6 +6,7 @@ import { KategoriService } from './kategori.service.js';
 import { createKategoriSchema, type CreateKategoriDto } from './dto/create-kategori.dto.js';
 import { updateKategoriSchema, type UpdateKategoriDto } from './dto/update-kategori.dto.js';
 import { RedirectToLoginFilter } from '../auth/redirect-to-login.filter.js';
+import { bacaHalaman, buatPagination } from '../common/pagination.js';
 
 type RequestLogin = Request & { user: JwtPayload };
 
@@ -20,8 +21,13 @@ export class KategoriController {
     }
 
     @Get('kategori')
-    findAll(@Query('search') search?: string) {
-        return this.kategoriService.findAll(search?.trim());
+    async findAll(
+        @Query('search') search?: string,
+        @Query('page') page?: string,
+        @Query('limit') limit?: string
+    ) {
+        const halaman = bacaHalaman(page, limit);
+        return this.kategoriService.findAll(search?.trim(), halaman);
     }
 
     @Get('kategori/:id')
@@ -45,14 +51,17 @@ export class KategoriController {
     async index(
         @Req() req: RequestLogin,
         @Query('search') search?: string,
+        @Query('page') page?: string,
         @Query('pesan') pesan?: string,
         @Query('error') error?: string,
     ) {
         const kataKunci = search?.trim();
+        const hasil = await this.kategoriService.findAll(kataKunci, bacaHalaman(page));
         return {
             title: 'Kategori',
             user: req.user,
-            kategori: await this.kategoriService.findAll(kataKunci),
+            kategori: hasil.data,
+            pagination: buatPagination('/admin/kategori', hasil.meta, kataKunci),
             search: kataKunci,
             pesan,
             error,

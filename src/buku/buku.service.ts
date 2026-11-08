@@ -2,6 +2,8 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { PrismaService } from '../prisma/prisma.service.js';
 import { CreateBukuDto } from './dto/create-buku.dto.js';
 import { UpdateBukuDto } from './dto/update-buku.dto.js';
+import type { Prisma } from '../generated/prisma/client.js';
+import { buatMeta, type Halaman } from '../common/pagination.js';
 
 @Injectable()
 export class BukuService {
@@ -19,19 +21,29 @@ export class BukuService {
     return this.prisma.buku.create({ data: createBukuDto });
   }
 
-  findAll(search?: string) {
-    return this.prisma.buku.findMany({
-      where: search ? {
+  async findAll(search: string | undefined, halaman: Halaman) {
+    const where: Prisma.bukuWhereInput = search
+      ? {
         OR: [
           { judul: { contains: search, mode: 'insensitive' } },
           { pengarang: { contains: search, mode: 'insensitive' } },
           { kategori: { nama: { contains: search, mode: 'insensitive' } } },
         ],
       }
-        : {},
-      orderBy: { judul: 'asc' },
-      include: { kategori: { select: { id: true, nama: true } } },
-    });
+      : {};
+
+    const [data, total] = await this.prisma.$transaction([
+      this.prisma.buku.findMany({
+        where,
+        orderBy: { judul: 'asc' },
+        include: { kategori: { select: { id: true, nama: true } } },
+        skip: (halaman.page - 1) * halaman.limit,
+        take: halaman.limit,
+      }),
+      this.prisma.buku.count({ where }),
+    ]);
+
+    return { data, meta: buatMeta(total, halaman) };
   }
 
   async findOne(id: string) {

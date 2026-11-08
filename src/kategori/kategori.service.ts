@@ -2,6 +2,8 @@ import { ConflictException, Injectable, NotFoundException } from '@nestjs/common
 import { PrismaService } from '../prisma/prisma.service.js';
 import { CreateKategoriDto } from './dto/create-kategori.dto.js';
 import { UpdateKategoriDto } from './dto/update-kategori.dto.js';
+import type { Prisma } from '../generated/prisma/client.js';
+import { buatMeta, type Halaman } from '../common/pagination.js';
 
 @Injectable()
 export class KategoriService {
@@ -11,12 +13,23 @@ export class KategoriService {
         return this.prisma.kategori.create({ data: createKategoriDto });
     }
 
-    findAll(search?: string) {
-        return this.prisma.kategori.findMany({
-            where: search ? { nama: { contains: search, mode: 'insensitive' } } : {},
-            orderBy: { nama: 'asc' },
-            include: { _count: { select: { buku: true } } },
-        });
+    async findAll(search: string | undefined, halaman: Halaman) {
+        const where: Prisma.kategoriWhereInput = search
+            ? { nama: { contains: search, mode: 'insensitive' } }
+            : {};
+
+        const [data, total] = await this.prisma.$transaction([
+            this.prisma.kategori.findMany({
+                where,
+                orderBy: { nama: 'asc' },
+                include: { _count: { select: { buku: true } } },
+                skip: (halaman?.page - 1) * halaman?.limit,
+                take: halaman?.limit,
+            }),
+            this.prisma.kategori.count({ where }),
+        ]);
+
+        return { data, meta: buatMeta(total, halaman) };
     }
 
     async findOne(id: string) {

@@ -34,7 +34,7 @@
             <tbody>
                 {{#each buku}}
                 <tr>
-                    <td scope="col" class="text-center">{{nomor @index}}</td>
+                    <td class="text-center">{{nomor @index ../pagination.mulai}}</td>
                     <td>{{judul}}</td>
                     <td>{{pengarang}}</td>
                     <td>{{kategori.nama}}</td>
@@ -43,7 +43,7 @@
                         <a href="/admin/buku/{{id}}" class="btn btn-sm btn-info">Detail</a>
                         <a href="/admin/buku/{{id}}/edit" class="btn btn-sm btn-warning">Edit</a>
                         <form method="post" action="/admin/buku/{{id}}/hapus" class="d-inline"
-                            onsubmit="return confirm('Hapus buku {{nama}}?')">
+                            onsubmit="return confirm('Hapus buku {{judul}}?')">
                             <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
                         </form>
                     </td>
@@ -57,3 +57,5 @@
         </table>
     </div>
 </div>
+
+{{> pagination pagination}}

@@ -1,0 +1,27 @@
+<div class="d-flex justify-content-between align-items-center mt-3">
+    <small class="text-muted">{{info}}</small>
+
+    {{#if tampil}}
+        <nav aria-label="Navigasi halaman">
+            <ul class="pagination mb-0">
+                {{#if sebelumnya}}
+                    <li class="page-item"><a class="page-link" href="{{sebelumnya}}">&laquo;</a></li>
+                {{else}}
+                    <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+                {{/if}}
+
+                {{#each halaman}}
+                    <li class="page-item {{#if aktif}}active{{/if}}">
+                        <a class="page-link" href="{{url}}">{{number}}</a>
+                    </li>
+                {{/each}}
+
+                {{#if selanjutnya}}
+                    <li class="page-item"><a class="page-link" href="{{selanjutnya}}">&raquo;</a></li>
+                {{else}}
+                    <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+                {{/if}}
+            </ul>
+        </nav>
+    {{/if}}
+</div>

@@ -6,6 +6,7 @@ import { BukuService } from './buku.service.js';
 import { createBukuSchema, type CreateBukuDto } from './dto/create-buku.dto.js';
 import { updateBukuSchema, type UpdateBukuDto } from './dto/update-buku.dto.js';
 import { RedirectToLoginFilter } from '../auth/redirect-to-login.filter.js';
+import { bacaHalaman, buatPagination } from '../common/pagination.js';
 
 type RequestLogin = Request & { user: JwtPayload };
 
@@ -20,8 +21,13 @@ export class BukuController {
   }
 
   @Get('buku')
-  findAll(@Query('search') search?: string) {
-    return this.bukuService.findAll(search?.trim());
+  findAll(
+    @Query('search') search?: string,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string
+  ) {
+    const halaman = bacaHalaman(page, limit);
+    return this.bukuService.findAll(search?.trim(), halaman);
   }
 
   @Get('buku/:id')
@@ -45,14 +51,17 @@ export class BukuController {
   async index(
     @Req() req: RequestLogin,
     @Query('search') search?: string,
+    @Query('page') page?: string,
     @Query('pesan') pesan?: string,
     @Query('error') error?: string,
   ) {
     const kataKunci = search?.trim();
+    const hasil = await this.bukuService.findAll(kataKunci, bacaHalaman(page));
     return {
       title: 'Buku',
       user: req.user,
-      buku: await this.bukuService.findAll(kataKunci),
+      buku: hasil.data,
+      pagination: buatPagination('/admin/buku', hasil.meta, kataKunci),
       search: kataKunci,
       pesan,
       error,
