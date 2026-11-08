@@ -27,8 +27,8 @@ export class KategoriService {
         where,
         orderBy: { nama: 'asc' },
         include: { _count: { select: { buku: true } } },
-        skip: (halaman?.page - 1) * halaman.limit,
-        take: halaman?.limit,
+        skip: (halaman.page - 1) * halaman.limit,
+        take: halaman.limit,
       }),
       this.prisma.kategori.count({ where }),
     ]);
