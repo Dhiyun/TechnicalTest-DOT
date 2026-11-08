@@ -1,0 +1,43 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">{{buku.nama}}</h1>
+    <div>
+        <a href="/admin/buku/{{buku.id}}/edit" class="btn btn-warning">Edit</a>
+        <form method="post" action="/admin/buku/{{buku.id}}/hapus" class="d-inline"
+            onsubmit="return confirm('Hapus buku {{buku.nama}}?')">
+            <button type="submit" class="btn btn-danger">Hapus</button>
+        </form>
+    </div>
+</div>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <dl class="row mb-0">
+            <dt class="col-sm-3">Judul</dt>
+            <dd class="col-sm-9">{{buku.judul}}</dd>
+
+            <dt class="col-sm-3">Pengarang</dt>
+            <dd class="col-sm-9">{{buku.pengarang}}</dd>
+
+            <dt class="col-sm-3">Kategori</dt>
+            <dd class="col-sm-9">
+                {{buku.kategori.nama}}
+            </dd>
+
+            <dt class="col-sm-3">Tahun Terbit</dt>
+            <dd class="col-sm-9">
+                {{#if buku.tahun_terbit}}
+                    {{buku.tahun_terbit}}
+                {{else}}
+                    <span class="text-muted">-</span>
+                {{/if}}
+            </dd>
+
+            <dt class="col-sm-3">Stok</dt>
+            <dd class="col-sm-9 mb-0">{{buku.stok}}</dd>
+        </dl>
+    </div>
+</div>
+
+<div>
+    <a href="/admin/buku" class="btn btn-secondary">Kembali</a>
+</div>

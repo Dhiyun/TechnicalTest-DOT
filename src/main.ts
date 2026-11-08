@@ -15,6 +15,7 @@ async function bootstrap() {
   app.setLocal('layout', 'layouts/app');
 
   hbs.registerHelper('nomor', (index: number) => index + 1);
+  hbs.registerHelper('sama', (a: unknown, b: unknown) => a === b);
 
   await app.listen(process.env.PORT ?? 3000);
 }

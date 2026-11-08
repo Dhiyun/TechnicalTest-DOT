@@ -19,8 +19,16 @@ export class BukuService {
     return this.prisma.buku.create({ data: createBukuDto });
   }
 
-  findAll() {
+  findAll(search?: string) {
     return this.prisma.buku.findMany({
+      where: search ? {
+        OR: [
+          { judul: { contains: search, mode: 'insensitive' } },
+          { pengarang: { contains: search, mode: 'insensitive' } },
+          { kategori: { nama: { contains: search, mode: 'insensitive' } } },
+        ],
+      }
+        : {},
       orderBy: { judul: 'asc' },
       include: { kategori: { select: { id: true, nama: true } } },
     });
@@ -51,5 +59,12 @@ export class BukuService {
   async remove(id: string) {
     await this.findOne(id);
     return this.prisma.buku.delete({ where: { id } });
+  }
+
+  listKategori() {
+    return this.prisma.kategori.findMany({
+      select: { id: true, nama: true },
+      orderBy: { nama: 'asc' },
+    });
   }
 }

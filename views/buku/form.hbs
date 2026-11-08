@@ -1,0 +1,67 @@
+<h1 class="h3 mb-3">{{title}}</h1>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <form method="post" action="{{action}}">
+            <div class="mb-3">
+                <label for="judul" class="form-label">Judul <span class="text-danger">*</span></label>
+                <input type="text" id="judul" name="judul" value="{{buku.judul}}"
+                    class="form-control {{#if errors.judul}}is-invalid{{/if}}">
+                {{#if errors.judul}}
+                    <div class="invalid-feedback">{{errors.judul}}</div>
+                {{/if}}
+            </div>
+
+            <div class="mb-3">
+                <label for="pengarang" class="form-label">Pengarang <span class="text-danger">*</span></label>
+                <input type="text" id="pengarang" name="pengarang" value="{{buku.pengarang}}"
+                    class="form-control {{#if errors.pengarang}}is-invalid{{/if}}">
+                {{#if errors.pengarang}}
+                    <div class="invalid-feedback">{{errors.pengarang}}</div>
+                {{/if}}
+            </div>
+
+            <div class="mb-3">
+                <label for="kategoriId" class="form-label">Kategori <span class="text-danger">*</span></label>
+                <select id="kategoriId" name="kategoriId"
+                    class="form-select {{#if errors.kategoriId}}is-invalid{{/if}}">
+                    <option value="">-- Pilih kategori --</option>
+                    {{#each kategoriList}}
+                        <option value="{{id}}" {{#if (sama id ../buku.kategoriId)}}selected{{/if}}>{{nama}}</option>
+                    {{/each}}
+                </select>
+                {{#if errors.kategoriId}}
+                    <div class="invalid-feedback">{{errors.kategoriId}}</div>
+                {{/if}}
+                {{#unless kategoriList.length}}
+                    <div class="form-text">
+                        Belum ada kategori. <a href="/admin/kategori/tambah">Tambah kategori dulu</a>.
+                    </div>
+                {{/unless}}
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="tahun_terbit" class="form-label">Tahun Terbit</label>
+                    <input type="number" id="tahun_terbit" name="tahun_terbit" value="{{buku.tahun_terbit}}"
+                        class="form-control {{#if errors.tahun_terbit}}is-invalid{{/if}}">
+                    {{#if errors.tahun_terbit}}
+                        <div class="invalid-feedback">{{errors.tahun_terbit}}</div>
+                    {{/if}}
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="stok" class="form-label">Stok <span class="text-danger">*</span></label>
+                    <input type="number" id="stok" name="stok" value="{{buku.stok}}"
+                        class="form-control {{#if errors.stok}}is-invalid{{/if}}">
+                    {{#if errors.stok}}
+                        <div class="invalid-feedback">{{errors.stok}}</div>
+                    {{/if}}
+                </div>
+            </div>
+
+            <a href="/admin/buku" class="btn btn-secondary">Batal</a>
+            <button type="submit" class="btn btn-primary">Simpan</button>
+        </form>
+    </div>
+</div>

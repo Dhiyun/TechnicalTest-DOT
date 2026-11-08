@@ -1,4 +1,22 @@
-<h1 class="h3 mb-3">Buku</h1>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">{{title}}</h1>
+    <a href="/admin/buku/tambah" class="btn btn-primary">+ Tambah {{title}}</a>
+</div>
+
+{{#if pesan}}
+    <div class="alert alert-success">{{pesan}}</div>
+{{/if}}
+{{#if error}}
+    <div class="alert alert-danger">{{error}}</div>
+{{/if}}
+
+<form method="get" action="/admin/buku" class="d-flex gap-2 mb-3">
+    <input type="search" name="search" value="{{search}}" class="form-control" placeholder="Cari nama buku...">
+    <button type="submit" class="btn btn-outline-primary">Cari</button>
+    {{#if search}}
+        <a href="/admin/buku" class="btn btn-outline-secondary">Reset</a>
+    {{/if}}
+</form>
 
 <div class="card shadow-sm">
     <div class="table-responsive">
@@ -7,10 +25,10 @@
                 <tr>
                     <th scope="col" class="text-center text-nowrap">No</th>
                     <th scope="col" class="text-center text-nowrap">Judul</th>
-                    <th scope="col" class="text-center">Pengarang</th>
+                    <th scope="col" class="text-center text-nowrap">Pengarang</th>
                     <th scope="col" class="text-center text-nowrap">Kategori</th>
-                    <th scope="col" class="text-center text-nowrap">Tahun Terbit</th>
                     <th scope="col" class="text-center text-nowrap">Stok</th>
+                    <th scope="col" class="text-center text-nowrap">Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -20,18 +38,19 @@
                     <td>{{judul}}</td>
                     <td>{{pengarang}}</td>
                     <td>{{kategori.nama}}</td>
-                    <td>
-                        {{#if tahun_terbit}}
-                            {{tahun_terbit}}
-                        {{else}}
-                            <span class="text-muted">-</span>
-                        {{/if}}
-                    </td>
                     <td class="text-center">{{stok}}</td>
+                    <td class="text-center text-nowrap">
+                        <a href="/admin/buku/{{id}}" class="btn btn-sm btn-info">Detail</a>
+                        <a href="/admin/buku/{{id}}/edit" class="btn btn-sm btn-warning">Edit</a>
+                        <form method="post" action="/admin/buku/{{id}}/hapus" class="d-inline"
+                            onsubmit="return confirm('Hapus buku {{nama}}?')">
+                            <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
+                        </form>
+                    </td>
                 </tr>
                 {{else}}
                 <tr>
-                    <td colspan="6" class="text-center text-muted py-4">Belum ada buku</td>
+                    <td colspan="5" class="text-center text-muted py-4">Belum ada buku</td>
                 </tr>
                 {{/each}}
             </tbody>
