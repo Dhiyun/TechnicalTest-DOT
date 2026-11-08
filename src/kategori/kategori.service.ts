@@ -11,8 +11,9 @@ export class KategoriService {
         return this.prisma.kategori.create({ data: createKategoriDto });
     }
 
-    findAll() {
+    findAll(search?: string) {
         return this.prisma.kategori.findMany({
+            where: search ? { nama: { contains: search, mode: 'insensitive' } } : {},
             orderBy: { nama: 'asc' },
             include: { _count: { select: { buku: true } } },
         });
