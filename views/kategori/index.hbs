@@ -1,0 +1,36 @@
+<h1 class="h3 mb-3">Kategori</h1>
+
+<div class="card shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-hover table-bordered align-middle mb-0">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col" class="text-center text-nowrap">No</th>
+                    <th scope="col" class="text-center text-nowrap">Nama</th>
+                    <th scope="col" class="text-center">Deskripsi</th>
+                    <th scope="col" class="text-center text-nowrap">Jumlah Buku</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each kategori}}
+                <tr>
+                    <td scope="col" class="text-center">{{nomor @index}}</td>
+                    <td>{{nama}}</td>
+                    <td>
+                        {{#if deskripsi}}
+                            {{deskripsi}}
+                        {{else}}
+                            <span class="text-muted">-</span>
+                        {{/if}}
+                    </td>
+                    <td class="text-center">{{_count.buku}}</td>
+                </tr>
+                {{else}}
+                <tr>
+                    <td colspan="3" class="text-center text-muted py-4">Belum ada kategori</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</div>

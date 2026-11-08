@@ -7,6 +7,8 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import type { Request } from 'express';
 
+export const NAMA_COOKIE_TOKEN = 'token';
+
 export interface JwtPayload {
   sub: string;
   email: string;
@@ -14,15 +16,15 @@ export interface JwtPayload {
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
-  constructor(private readonly jwt: JwtService) {}
+  constructor(private readonly jwt: JwtService) { }
 
   async canActivate(context: ExecutionContext) {
     const request = context
       .switchToHttp()
       .getRequest<Request & { user?: JwtPayload }>();
 
-    const [type, token] = request.headers.authorization?.split(' ') ?? [];
-    if (type !== 'Bearer' || !token) {
+    const token = ambilTokenDariHeader(request) ?? ambilTokenDariCookie(request);
+    if (!token) {
       throw new UnauthorizedException('Token tidak ditemukan');
     }
 
@@ -33,4 +35,19 @@ export class JwtAuthGuard implements CanActivate {
     }
     return true;
   }
+}
+
+function ambilTokenDariHeader(request: Request) {
+  const [type, token] = request.headers.authorization?.split(' ') ?? [];
+  return type === 'Bearer' && token ? token : undefined;
+}
+
+function ambilTokenDariCookie(request: Request) {
+  for (const cookie of request.headers.cookie?.split(';') ?? []) {
+    const [kunci, ...nilai] = cookie.trim().split('=');
+    if (kunci === NAMA_COOKIE_TOKEN) {
+      return decodeURIComponent(nilai.join('='));
+    }
+  }
+  return undefined;
 }
