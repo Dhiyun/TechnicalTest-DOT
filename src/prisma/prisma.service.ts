@@ -1,4 +1,3 @@
-
 import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaPg } from '@prisma/adapter-pg';
@@ -11,11 +10,11 @@ export class PrismaService
 {
   constructor(config: ConfigService) {
     const adapter = new PrismaPg({
-        host: config.get<string>('DB_HOST'),
-        port: Number(config.get('DB_PORT')),
-        user: config.get<string>('DB_USERNAME'),
-        password: config.get<string>('DB_PASSWORD'),
-        database: config.get<string>('DB_DATABASE'),
+      host: config.get<string>('DB_HOST'),
+      port: Number(config.get('DB_PORT')),
+      user: config.get<string>('DB_USERNAME'),
+      password: config.get<string>('DB_PASSWORD'),
+      database: config.get<string>('DB_DATABASE'),
     });
     super({ adapter });
   }

@@ -16,14 +16,15 @@ export interface JwtPayload {
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
-  constructor(private readonly jwt: JwtService) { }
+  constructor(private readonly jwt: JwtService) {}
 
   async canActivate(context: ExecutionContext) {
     const request = context
       .switchToHttp()
       .getRequest<Request & { user?: JwtPayload }>();
 
-    const token = ambilTokenDariHeader(request) ?? ambilTokenDariCookie(request);
+    const token =
+      ambilTokenDariHeader(request) ?? ambilTokenDariCookie(request);
     if (!token) {
       throw new UnauthorizedException('Token tidak ditemukan');
     }
@@ -31,7 +32,9 @@ export class JwtAuthGuard implements CanActivate {
     try {
       request.user = await this.jwt.verifyAsync<JwtPayload>(token);
     } catch {
-      throw new UnauthorizedException('Token tidak valid atau sudah kedaluwarsa');
+      throw new UnauthorizedException(
+        'Token tidak valid atau sudah kedaluwarsa',
+      );
     }
     return true;
   }

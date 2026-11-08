@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { CreateBukuDto } from './dto/create-buku.dto.js';
 import { UpdateBukuDto } from './dto/update-buku.dto.js';
@@ -7,12 +11,16 @@ import { buatMeta, type Halaman } from '../common/pagination.js';
 
 @Injectable()
 export class BukuService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   private async cekKategori(kategoriId: string) {
-    const kategori = await this.prisma.kategori.findUnique({ where: { id: kategoriId } });
+    const kategori = await this.prisma.kategori.findUnique({
+      where: { id: kategoriId },
+    });
     if (!kategori) {
-      throw new BadRequestException(`Kategori dengan id ${kategoriId} tidak ditemukan`);
+      throw new BadRequestException(
+        `Kategori dengan id ${kategoriId} tidak ditemukan`,
+      );
     }
   }
 
@@ -24,12 +32,12 @@ export class BukuService {
   async findAll(search: string | undefined, halaman: Halaman) {
     const where: Prisma.bukuWhereInput = search
       ? {
-        OR: [
-          { judul: { contains: search, mode: 'insensitive' } },
-          { pengarang: { contains: search, mode: 'insensitive' } },
-          { kategori: { nama: { contains: search, mode: 'insensitive' } } },
-        ],
-      }
+          OR: [
+            { judul: { contains: search, mode: 'insensitive' } },
+            { pengarang: { contains: search, mode: 'insensitive' } },
+            { kategori: { nama: { contains: search, mode: 'insensitive' } } },
+          ],
+        }
       : {};
 
     const [data, total] = await this.prisma.$transaction([

@@ -21,10 +21,19 @@ export function bacaHalaman(page?: string, limit?: string): Halaman {
 }
 
 export function buatMeta(total: number, { page, limit }: Halaman): MetaHalaman {
-  return { page, limit, total, totalPages: Math.max(1, Math.ceil(total / limit)) };
+  return {
+    page,
+    limit,
+    total,
+    totalPages: Math.max(1, Math.ceil(total / limit)),
+  };
 }
 
-export function buatPagination(basePath: string, meta: MetaHalaman, search?: string) {
+export function buatPagination(
+  basePath: string,
+  meta: MetaHalaman,
+  search?: string,
+) {
   const url = (page: number) => {
     const params = new URLSearchParams({ page: String(page) });
     if (search) {

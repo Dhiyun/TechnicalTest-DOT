@@ -49,9 +49,13 @@
                     </td>
                 </tr>
                 {{else}}
-                <tr>
-                    <td colspan="6" class="text-center text-muted py-4">Belum ada buku</td>
-                </tr>
+                <td colspan="6" class="text-center text-muted py-4">
+                    {{#if search}}
+                        Buku "{{search}}" tidak ditemukan
+                    {{else}}
+                        Belum ada buku
+                    {{/if}}
+                </td>
                 {{/each}}
             </tbody>
         </table>

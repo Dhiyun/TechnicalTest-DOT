@@ -1,4 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, UseFilters, Render, Req, Res, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  UseFilters,
+  Render,
+  Req,
+  Res,
+  Query,
+} from '@nestjs/common';
 import type { Request, Response } from 'express';
 import { z } from 'zod';
 import { JwtAuthGuard, type JwtPayload } from '../auth/jwt-auth.guard.js';
@@ -13,7 +27,7 @@ type RequestLogin = Request & { user: JwtPayload };
 @Controller()
 @UseGuards(JwtAuthGuard)
 export class BukuController {
-  constructor(private readonly bukuService: BukuService) { }
+  constructor(private readonly bukuService: BukuService) {}
 
   @Post('buku')
   create(@Body({ schema: createBukuSchema }) createBukuDto: CreateBukuDto) {
@@ -24,7 +38,7 @@ export class BukuController {
   findAll(
     @Query('search') search?: string,
     @Query('page') page?: string,
-    @Query('limit') limit?: string
+    @Query('limit') limit?: string,
   ) {
     const halaman = bacaHalaman(page, limit);
     return this.bukuService.findAll(search?.trim(), halaman);
@@ -36,7 +50,10 @@ export class BukuController {
   }
 
   @Patch('buku/:id')
-  update(@Param('id') id: string, @Body({ schema: updateBukuSchema }) updateBukuDto: UpdateBukuDto) {
+  update(
+    @Param('id') id: string,
+    @Body({ schema: updateBukuSchema }) updateBukuDto: UpdateBukuDto,
+  ) {
     return this.bukuService.update(id, updateBukuDto);
   }
 
@@ -77,15 +94,26 @@ export class BukuController {
 
   @Post('admin/buku')
   @UseFilters(RedirectToLoginFilter)
-  async simpan(@Req() req: RequestLogin, @Body() body: Record<string, string>, @Res() res: Response) {
+  async simpan(
+    @Req() req: RequestLogin,
+    @Body() body: Record<string, string>,
+    @Res() res: Response,
+  ) {
     const hasil = bacaFormBuku(body);
     if (!hasil.success) {
       const errors = z.flattenError(hasil.error).fieldErrors;
-      return res.status(400).render('buku/form', await this.dataForm(req, 'Tambah Buku', '/admin/buku', body, errors));
+      return res
+        .status(400)
+        .render(
+          'buku/form',
+          await this.dataForm(req, 'Tambah Buku', '/admin/buku', body, errors),
+        );
     }
 
     await this.bukuService.create(hasil.data);
-    return res.redirect(`/admin/buku?pesan=${encodeURIComponent('Buku berhasil ditambahkan')}`);
+    return res.redirect(
+      `/admin/buku?pesan=${encodeURIComponent('Buku berhasil ditambahkan')}`,
+    );
   }
 
   @Get('admin/buku/:id')
@@ -109,25 +137,51 @@ export class BukuController {
 
   @Post('admin/buku/:id/edit')
   @UseFilters(RedirectToLoginFilter)
-  async ubah(@Req() req: RequestLogin, @Param('id') id: string, @Body() body: Record<string, string>, @Res() res: Response) {
+  async ubah(
+    @Req() req: RequestLogin,
+    @Param('id') id: string,
+    @Body() body: Record<string, string>,
+    @Res() res: Response,
+  ) {
     const hasil = bacaFormBuku(body);
     if (!hasil.success) {
       const errors = z.flattenError(hasil.error).fieldErrors;
-      return res.status(400).render('buku/form', await this.dataForm(req, 'Edit Buku', `/admin/buku/${id}/edit`, body, errors));
+      return res
+        .status(400)
+        .render(
+          'buku/form',
+          await this.dataForm(
+            req,
+            'Edit Buku',
+            `/admin/buku/${id}/edit`,
+            body,
+            errors,
+          ),
+        );
     }
 
     await this.bukuService.update(id, hasil.data);
-    return res.redirect(`/admin/buku?pesan=${encodeURIComponent('Buku berhasil diubah')}`);
+    return res.redirect(
+      `/admin/buku?pesan=${encodeURIComponent('Buku berhasil diubah')}`,
+    );
   }
 
   @Post('admin/buku/:id/hapus')
   @UseFilters(RedirectToLoginFilter)
   async hapus(@Param('id') id: string, @Res() res: Response) {
     await this.bukuService.remove(id);
-    return res.redirect(`/admin/buku?pesan=${encodeURIComponent('Buku berhasil dihapus')}`);
+    return res.redirect(
+      `/admin/buku?pesan=${encodeURIComponent('Buku berhasil dihapus')}`,
+    );
   }
 
-  private async dataForm(req: RequestLogin, title: string, action: string, buku: object, errors?: object) {
+  private async dataForm(
+    req: RequestLogin,
+    title: string,
+    action: string,
+    buku: object,
+    errors?: object,
+  ) {
     return {
       title,
       user: req.user,

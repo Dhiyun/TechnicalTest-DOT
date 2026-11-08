@@ -15,7 +15,11 @@ async function bootstrap() {
   app.setLocal('layout', 'layouts/app');
 
   hbs.registerPartials(join(import.meta.dirname, '..', 'views', 'partials'));
-  hbs.registerHelper('nomor', (index: number, mulai: unknown) => index + 1 + (typeof mulai === 'number' ? mulai : 0));
+  hbs.registerHelper(
+    'nomor',
+    (index: number, mulai: unknown) =>
+      index + 1 + (typeof mulai === 'number' ? mulai : 0),
+  );
   hbs.registerHelper('sama', (a: unknown, b: unknown) => a === b);
 
   await app.listen(process.env.PORT ?? 3000);

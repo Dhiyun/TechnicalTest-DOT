@@ -1,12 +1,27 @@
-import { Body, Controller, Get, HttpCode, Post, Req, UseGuards, Render, Res, UnauthorizedException } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Post,
+  Req,
+  UseGuards,
+  Render,
+  Res,
+  UnauthorizedException,
+} from '@nestjs/common';
 import type { Request, Response } from 'express';
 import { AuthService } from './auth.service.js';
 import { loginSchema, type LoginDto } from './dto/login.dto.js';
-import { JwtAuthGuard, NAMA_COOKIE_TOKEN, type JwtPayload } from './jwt-auth.guard.js';
+import {
+  JwtAuthGuard,
+  NAMA_COOKIE_TOKEN,
+  type JwtPayload,
+} from './jwt-auth.guard.js';
 
 @Controller()
 export class AuthController {
-  constructor(private readonly authService: AuthService) { }
+  constructor(private readonly authService: AuthService) {}
 
   @Post('auth/login')
   @HttpCode(200)
@@ -23,10 +38,10 @@ export class AuthController {
   @Get('login')
   @Render('auth/login')
   halamanLogin() {
-    return { title: 'Login' }
+    return { title: 'Login' };
   }
 
-  // Web 
+  // Web
   @Post('login')
   async loginWeb(@Body() body: Record<string, string>, @Res() res: Response) {
     const hasil = loginSchema.safeParse(body);
@@ -35,7 +50,7 @@ export class AuthController {
         title: 'Login',
         email: body.email,
         error: 'Email atau password tidak valid',
-      })
+      });
     }
 
     try {
