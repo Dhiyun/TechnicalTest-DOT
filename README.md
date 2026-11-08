@@ -1,132 +1,173 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Admin Panel Perpustakaan
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Project ini adalah admin panel untuk mengelola data perpustakaan, yang saya buat untuk Technical Test menggunakan NestJS.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Ada dua data utama yang dikelola, yaitu **kategori** dan **buku**. Satu kategori bisa memiliki banyak buku (relasi one-to-many). Aplikasi dibuat dengan **NestJS**, **Prisma**, dan **PostgreSQL** dengan menggunakan **MVC**, untuk tampilannya memakai **Handlebars** dan **Bootstrap**.
 
-## Description
+## Fitur
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- Login admin menggunakan JWT
+- CRUD kategori dan CRUD buku
+- Halaman daftar dan halaman detail untuk kategori dan buku
+- Pencarian data (kategori berdasarkan nama; buku berdasarkan judul, pengarang, atau kategori)
+- Pagination pada halaman daftar
+- Validasi form
+- Halaman error (misalnya 404) dan respons error JSON untuk API
+- REST API untuk semua fitur di atas, yang bisa dites di Postman
 
-## Project setup
+## Screenshot
 
-```bash
-$ npm install
+<table>
+  <tr>
+    <th width="50%">Login</th>
+    <th width="50%">Daftar Kategori</th>
+  </tr>
+  <tr>
+    <td><img src="docs-technicaltest/screenshots/login.png" alt="Halaman login" width="100%"></td>
+    <td><img src="docs-technicaltest/screenshots/kategori-index.png" alt="Daftar kategori" width="100%"></td>
+  </tr>
+  <tr>
+    <th>Detail Kategori</th>
+    <th>Daftar Buku</th>
+  </tr>
+  <tr>
+    <td><img src="docs-technicaltest/screenshots/kategori-detail.png" alt="Detail kategori" width="100%"></td>
+    <td><img src="docs-technicaltest/screenshots/buku-index.png" alt="Daftar buku" width="100%"></td>
+  </tr>
+  <tr>
+    <th>Detail Buku</th>
+    <th>Form Buku</th>
+  </tr>
+  <tr>
+    <td><img src="docs-technicaltest/screenshots/buku-detail.png" alt="Detail buku" width="100%"></td>
+    <td><img src="docs-technicaltest/screenshots/buku-form.png" alt="Form buku" width="100%"></td>
+  </tr>
+  <tr>
+    <th>Pencarian</th>
+    <th>Validasi Form</th>
+  </tr>
+  <tr>
+    <td><img src="docs-technicaltest/screenshots/pencarian.png" alt="Pencarian" width="100%"></td>
+    <td><img src="docs-technicaltest/screenshots/form-validasi.png" alt="Validasi form" width="100%"></td>
+  </tr>
+  <tr>
+    <th colspan="2">Halaman Error</th>
+  </tr>
+  <tr>
+    <td colspan="2"><img src="docs-technicaltest/screenshots/error-404.png" alt="Halaman error 404" width="50%"></td>
+  </tr>
+</table>
+
+## Desain Database
+
+![ERD database perpustakaan](docs-technicaltest/screenshots/erd.png)
+
+Database terdiri dari tiga tabel:
+
+- **users**: menyimpan akun admin untuk login.
+- **kategori**: menyimpan kategori buku.
+- **buku**: menyimpan data buku. Setiap buku terhubung ke satu kategori melalui `kategoriId`.
+
+Kategori yang masih memiliki buku tidak bisa dihapus.
+
+## Struktur Folder
+
+```
+technicaltest-perpus/
+├── prisma/
+├── src/
+│   ├── auth/
+│   ├── kategori/
+│   ├── buku/
+│   ├── prisma/
+│   ├── common/
+│   └── main.ts
+├── views/
+│   ├── layouts/
+│   ├── partials/
+│   ├── auth/
+│   ├── kategori/
+│   └── buku/
 ```
 
-## Compile and run the project
+| Folder | Isi |
+|---|---|
+| `prisma/` | Schema database, migration, dan seeder untuk membuat akun admin |
+| `src/auth/` | Fitur login: controller, service, dan pengecekan token (guard) |
+| `src/kategori/` | Fitur kategori: controller, service, dan validasi data (dto) |
+| `src/buku/` | Fitur buku: controller, service, dan validasi data (dto) |
+| `src/prisma/` | Koneksi ke database |
+| `src/common/` | Kode yang dipakai bersama, yaitu pagination dan penanganan error |
+| `src/main.ts` | File yang pertama kali dijalankan, berisi pengaturan aplikasi |
+| `views/layouts/` | Kerangka halaman (navbar dan Bootstrap) |
+| `views/partials/` | Komponen yang dipakai ulang, misalnya pagination |
+| `views/auth/`, `views/kategori/`, `views/buku/` | Tampilan halaman untuk masing-masing fitur |
 
-```bash
-# development
-$ npm run start
+## Pola MVC
 
-# watch mode
-$ npm run start:dev
+Project ini menggunakan pola MVC (Model, View, Controller). Kodenya dibagi menjadi tiga bagian sesuai tugasnya:
 
-# production mode
-$ npm run start:prod
+| Bagian | Lokasi | Tugas |
+|---|---|---|
+| **Model** | `prisma/schema.prisma`, `*.service.ts`, folder `dto/` | Mengurus data: struktur tabel, query ke database, aturan validasi, dan aturan bisnis (misalnya kategori yang masih punya buku tidak boleh dihapus) |
+| **View** | folder `views/` (file `.hbs`) | Menampilkan data menjadi halaman HTML |
+| **Controller** | `*.controller.ts` | Menerima request, memanggil service, lalu menentukan halaman yang ditampilkan |
+
+Contoh alur saat membuka halaman daftar kategori (`/admin/kategori`):
+
+```
+Browser → KategoriController.index()        (Controller)
+        → KategoriService.findAll()         (Model, mengambil data lewat Prisma)
+        → views/kategori/index.hbs          (View, data ditampilkan dalam tabel)
+        → halaman HTML dikirim ke browser
 ```
 
-## Run tests
+Service yang sama juga dipakai oleh API. Misalnya, `GET /kategori` memanggil `KategoriService.findAll()` yang sama, tetapi hasilnya dikirim dalam bentuk JSON, bukan halaman. Dengan begitu, logika data cukup ditulis sekali di service dan dipakai bersama oleh halaman web maupun API.
 
-```bash
-# unit tests
-$ npm run test
+## Cara Menjalankan
 
-# e2e tests
-$ npm run test:e2e
+1. Clone repository, lalu install dependency:
 
-# test coverage
-$ npm run test:cov
-```
+   ```bash
+   git clone https://github.com/Dhiyun/TechnicalTest-DOT.git
+   cd TechnicalTest-DOT
+   npm install
+   ```
 
-## Deployment
+2. Salin `.env.example` menjadi `.env`, lalu isi koneksi database PostgreSQL dan `JWT_SECRET`.
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+3. Siapkan database dan akun admin:
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+   ```bash
+   npx prisma migrate dev --config prisma7.config.ts
+   npx prisma generate --config prisma7.config.ts
+   npx prisma db seed --config prisma7.config.ts
+   ```
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
+4. Jalankan aplikasi:
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+   ```bash
+   npm run start:dev
+   ```
 
-## Observability
+5. Buka http://localhost:3000, lalu login dengan email `superadmin@test.com`. Password-nya ada di `prisma/seed.ts`.
 
-In production applications, observability is essential for understanding how your system behaves, detecting issues early, and maintaining reliable performance.
+## Dependency
 
-[NestJS Observe](https://observe.nestjs.com) automatically instruments your NestJS application, giving you deep visibility into your system with minimal setup:
+- **NestJS**: framework backend
+- **Prisma** + `@prisma/adapter-pg`: ORM untuk PostgreSQL
+- **hbs (Handlebars)**: template engine untuk tampilan
+- **Bootstrap 5**: styling tampilan (lewat CDN)
+- **Zod**: validasi data
+- **@nestjs/jwt** dan **bcryptjs**: login dan enkripsi password
+- **@nestjs/config** dan **dotenv**: membaca file `.env`
 
-- **Distributed tracing:** Follow requests across services and understand how they flow through your system.
-- **Waterfall analysis:** Visualize request execution and identify slow operations, bottlenecks, and unexpected delays.
-- **Performance analysis:** Analyze application performance in real time and quickly pinpoint areas that need optimization.
-- **Metrics:** Track key application and infrastructure metrics to understand system health and performance trends.
-- **Logging:** Centralize and correlate logs with traces and other telemetry to make debugging easier.
-- **Error tracking:** Detect errors quickly and investigate their root causes with the surrounding context.
-- **SLA monitoring:** Track service-level objectives and identify when your application is approaching or exceeding defined thresholds.
-- **Alarms and alerts:** Set up alerts for critical errors, performance degradation, SLA violations, and other anomalies so your team can react quickly.
+## Informasi untuk Developer Selanjutnya
 
-To add it to this project, run this and approve the code it prints at [observe.nestjs.com/link](https://observe.nestjs.com/link) - signing up for free if you have no account:
+Kalau ingin melanjutkan project ini, berikut beberapa hal yang bisa membantu:
 
-```bash
-$ npx @nestjs/observe link
-```
-
-It installs `@nestjs/observe`, wires it into `AppModule` and `main.ts`, and writes the app key and secret into `.env`, which every `nest start` script (`start`, `start:dev`, `start:debug`) then loads. In production, set `OBSERVE_APP_KEY` and `OBSERVE_APP_SECRET` in the environment instead.
-
-Or do it by hand:
-
-```bash
-$ npm install @nestjs/observe
-```
-
-Then follow the [setup guide](https://docs.nestjs.com/observability/sdk) - it takes a single import and an app key.
-
-The free plan needs no payment details and covers 300,000 events a month. You can also browse the [live demo](https://www.observe-demo.nestjs.com/dashboard) first - the whole dashboard over a busy service's data, with nothing to install.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Auto-instrument your application with [NestJS Observe](https://observe.nestjs.com). Distributed tracing, metrics, and logging made easy. Error tracking and performance monitoring for your NestJS applications.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+1. **Mulai dari mana.** Ikuti langkah di bagian Cara Menjalankan. Setelah login, halaman admin bisa dibuka di `/admin/kategori` dan `/admin/buku`.
+2. **Letak kode.** Setiap fitur punya folder sendiri di `src/` (`kategori/` dan `buku/`), berisi controller, service, dan dto. Tampilannya ada di folder `views/` dengan nama folder yang sama.
+3. **Menambah fitur baru.** Ikuti pola folder `kategori/` atau `buku/`: tambahkan tabel di `prisma/schema.prisma`, lalu buat dto, service, controller, dan view-nya.
+4. **API.** Selain halaman web, tersedia API di `/kategori` dan `/buku` yang bisa dicoba lewat Postman. Login dulu lewat `/auth/login` untuk mendapatkan token.
+5. **Setelah mengubah database.** Setiap kali `schema.prisma` diubah, jalankan migrate lalu `npx prisma generate --config prisma7.config.ts`.
